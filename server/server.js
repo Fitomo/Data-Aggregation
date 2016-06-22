@@ -5,7 +5,7 @@ const app = express();
 const http = require('http').Server(app);
 
 // Initial Configuration, Static Assets, & View Engine Configuration
-require('./config/initialize.js')(app, express);
+require('./config/initialize.js')(app);
 
 // Authentication Middleware: Express Sessions, Passport Strategy
 require('./config/auth.js')(app);

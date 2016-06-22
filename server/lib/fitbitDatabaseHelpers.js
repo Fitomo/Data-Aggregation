@@ -36,29 +36,30 @@ module.exports = {
         return act;
       })
       .then((newAct) => {
+        // ******* SWITCH CASE?
         if (type === 'distance') {
-          newAct.set({
+          return newAct.set({
             distance: datum.value,
           }).save();
         } else if (type === 'steps') {
-          newAct.set({
+          return newAct.set({
             steps: datum.value,
           }).save();
         } else if (type === 'calories') {
-          newAct.set({
+          return newAct.set({
             calories: datum.value,
           }).save();
         } else if (type === 'sleep') {
-          newAct.set({
+          return newAct.set({
             totalSleep: datum.value,
           }).save();
         } else if (type === 'hr') {
-          newAct.set({
+          return newAct.set({
             restingHR: datum.value.restingHR,
             heartRateZones: JSON.stringify(datum.value.heartRateZones),
           }).save();
         } else if (type === 'weight') {
-          newAct.set({
+          return newAct.set({
             weight: datum.value,
           }).save();
         }

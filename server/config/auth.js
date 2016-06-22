@@ -1,10 +1,10 @@
 const session = require('express-session');
 
-module.exports = (app, express, passport) => {
+module.exports = (app) => {
   app.use(session({
     name: 'fitomo',
     secret: 'fitomo',
-    resave: true, 
+    resave: true,
     saveUninitialized: false,
     rolling: true,
   }));

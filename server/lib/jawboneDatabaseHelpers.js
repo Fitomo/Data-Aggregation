@@ -1,5 +1,6 @@
 const Activity = require('../models/ActivityModel');
 const utils = require('./utils');
+const conversions = require('./conversions');
 
 module.exports = {
   syncIterateThrough: (data, userid, type, insert, cb) => {
@@ -34,30 +35,31 @@ module.exports = {
         return act;
       })
       .then((newAct) => {
+        // ******* SWITCH CASE?
         if (type === 'activities') {
-          newAct.set({
+          return newAct.set({
             calories: datum.details.calories,
-            distance: datum.details.km * 0.621371,
+            distance: conversions.kmsToMiles(datum.details.km),
             steps: datum.details.steps,
           }).save();
         } else if (type === 'sleep') {
-          const sleep = (datum.details.duration - datum.details.awake) / 60;
+          const sleep = conversions.secondsToMinutes((datum.details.duration - datum.details.awake));
           const typeOfSleep = {
-            rem: datum.details.rem / 60,
-            light: datum.details.light / 60,
-            deep: datum.details.deep / 60,
+            rem: conversions.secondsToMinutes(datum.details.rem),
+            light: conversions.secondsToMinutes(datum.details.light),
+            deep: conversions.secondsToMinutes(datum.details.deep),
           };
-          newAct.set({
+          return newAct.set({
             totalSleep: sleep,
             sleep: JSON.stringify(typeOfSleep),
           }).save();
         } else if (type === 'hr') {
-          newAct.set({
+          return newAct.set({
             restingHR: datum.resting_heartrate,
           }).save();
         } else if (type === 'weight') {
-          const weight = datum.weight * 2.20462;
-          newAct.set({
+          const weight = conversions.kgsToLbs(datum.weight);
+          return newAct.set({
             weight,
           }).save();
         }

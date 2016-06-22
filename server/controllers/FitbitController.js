@@ -16,14 +16,14 @@ const getFitbitData = (req, res) => {
   const accessToken = req.query.accessToken;
   const startDate = req.query.startDate;
   const endDate = req.query.endDate;
-  const auth = 'Bearer ' + accessToken;
+  const auth = `Bearer ${accessToken}`;
 
-  const distanceReqUrl = 'https://api.fitbit.com/1/user/' + fitbitId + '/activities/distance/date/' + startDate + '/' + endDate + '.json';
-  const stepsReqUrl = 'https://api.fitbit.com/1/user/' + fitbitId + '/activities/steps/date/' + startDate + '/' + endDate + '.json';
-  const caloriesReqUrl = 'https://api.fitbit.com/1/user/' + fitbitId + '/activities/tracker/calories/date/' + startDate + '/' + endDate + '.json';
-  const sleepReqUrl = 'https://api.fitbit.com/1/user/' + fitbitId + '/sleep/minutesAsleep/date/' + startDate + '/' + endDate + '.json';
-  const hrReqUrl = 'https://api.fitbit.com/1/user/' + fitbitId + '/activities/heart/date/' + startDate + '/' + endDate + '.json';
-  const weightReqUrl = 'https://api.fitbit.com/1/user/' + fitbitId + '/body/log/weight/date/' + startDate + '/' + endDate + '.json';
+  const distanceReqUrl = `https://api.fitbit.com/1/user/${fitbitId}/activities/distance/date/${startDate}/${endDate}.json`;
+  const stepsReqUrl = `https://api.fitbit.com/1/user/${fitbitId}/activities/steps/date/${startDate}/${endDate}.json`;
+  const caloriesReqUrl = `https://api.fitbit.com/1/user/${fitbitId}/activities/tracker/calories/date/${startDate}/${endDate}.json`;
+  const sleepReqUrl = `https://api.fitbit.com/1/user/${fitbitId}/sleep/minutesAsleep/date/${startDate}/${endDate}.json`;
+  const hrReqUrl = `https://api.fitbit.com/1/user/${fitbitId}/activities/heart/date/${startDate}/${endDate}.json`;
+  const weightReqUrl = `https://api.fitbit.com/1/user/${fitbitId}/body/log/weight/date/${startDate}/${endDate}.json`;
 
   const sendDistance = (cb) => utils.sendRequest(distanceReqUrl, auth, res, userid, fitbitRequestHelpers.insertDistance, cb);
   const sendSteps = (cb) => utils.sendRequest(stepsReqUrl, auth, res, userid, fitbitRequestHelpers.insertSteps, cb);
@@ -35,10 +35,8 @@ const getFitbitData = (req, res) => {
   const syncTasks = [sendDistance, sendSteps, sendCalories, sendSleep, sendHR, sendWeight];
   const callback = () => console.log('Inserted all items into database');
   syncTasks.push((cb) => {
-    setTimeout(() => {
-      cb();
-      utils.findUserInfo(userid, res);
-    }, 100);
+    cb();
+    utils.findUserInfo(userid, res);
   });
   utils.syncMap(syncTasks, callback, []);
 };

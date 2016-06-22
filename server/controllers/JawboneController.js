@@ -13,12 +13,12 @@ const getJawboneData = (req, res) => {
   const accessToken = req.query.accessToken;
   const startTime = req.query.startDate;
   const endTime = req.query.endDate;
-  const auth = 'Bearer ' + accessToken;
+  const auth = `Bearer ${accessToken}`;
 
-  const weightReqUrl = 'https://jawbone.com/nudge/api/v.1.1/users/@me/body_events?start_time=' + startTime + '&end_time=' + endTime;
-  const activitiesReqUrl = 'https://jawbone.com/nudge/api/v.1.1/users/@me/moves?start_time=' + startTime + '&end_time=' + endTime;
-  const sleepReqUrl = 'https://jawbone.com/nudge/api/v.1.1/users/@me/sleeps?start_time=' + startTime + '&end_time=' + endTime;
-  const hrReqUrl = 'https://jawbone.com/nudge/api/v.1.1/users/@me/heartrates?start_time=' + startTime + '&end_time=' + endTime;
+  const weightReqUrl = `https://jawbone.com/nudge/api/v.1.1/users/@me/body_events?start_time=${startTime}&end_time=${endTime}`;
+  const activitiesReqUrl = `https://jawbone.com/nudge/api/v.1.1/users/@me/moves?start_time=${startTime}&end_time=${endTime}`;
+  const sleepReqUrl = `https://jawbone.com/nudge/api/v.1.1/users/@me/sleeps?start_time=${startTime}&end_time=${endTime}`;
+  const hrReqUrl = `https://jawbone.com/nudge/api/v.1.1/users/@me/heartrates?start_time=${startTime}&end_time=${endTime}`;
 
   const sendActivities = (cb) => utils.sendRequest(activitiesReqUrl, auth, res, userid, jawboneRequestHelpers.insertActivities, cb);
   const sendSleep = (cb) => utils.sendRequest(sleepReqUrl, auth, res, userid, jawboneRequestHelpers.insertSleep, cb);
@@ -29,10 +29,8 @@ const getJawboneData = (req, res) => {
   // ****** WHY IS INSERT ALL COMING LAST BEHIND HR?
   const callback = () => console.log('Inserted all items into database');
   syncTasks.push((cb) => {
-    setTimeout(() => {
-      cb();
-      utils.findUserInfo(userid, res);
-    }, 100);
+    cb();
+    utils.findUserInfo(userid, res);
   });
   utils.syncMap(syncTasks, callback, []);
 };

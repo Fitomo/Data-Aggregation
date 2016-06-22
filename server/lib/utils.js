@@ -14,6 +14,7 @@ const sendRequest = (url, auth, res, userid, helper, cb) => {
 
   request(options, (err, response, body) => {
     if (err) {
+      // ****** HANDLE THIS ERROR
       console.error('Error:', err);
     } else {
       helper(body, userid, cb);
