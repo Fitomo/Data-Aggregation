@@ -11,9 +11,7 @@ module.exports = {
       });
     });
     syncTasks.push((callback) => {
-      setTimeout(() => {
-        callback();
-      }, 1500);
+      callback();
     });
     const callback = () => console.log('Inserted', type, 'items into database');
     utils.syncMap(syncTasks, callback, []);
