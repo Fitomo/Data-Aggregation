@@ -1,44 +1,35 @@
-const JawboneClient = require('../../jawbone-client-oauth2/src/client.js');
-const client = new JawboneClient('OWoCNkdQw6U', '9aa9e0a20c1b7279a416537e7b13b80b5c1c7155');
-const redirectUri = 'http://127.0.0.1:8080/auth/jawbone/callback';
+const jawboneRequestHelpers = require('../lib/jawboneRequestHelpers');
+const syncMap = require('../lib/syncMap');
 
+const getJawboneData = (req, res) => {
+  // const userid = req.query.user_id
+  // const accessToken = req.query.accessToken;
+  // const startDate = req.query.startDate;
+  // const endDate = req.query.endDate;
+  // const auth = 'Bearer', accessToken;
 
-module.exports = {
-  jawboneLogin: (req, res) => {
-    const scope = ['basic_read'];
-    const authorizationUri = client.getAuthorizationUrl(redirectUri, scope);
-    res.redirect(authorizationUri);
-  },
+  // date needs to be in yyyyMMdd format
+  const date = '20160620';
+  const userid = 1;
+  const auth = 'Bearer u1r_4oEFjcHQQJPKxwCvVWS9Lrh8eW8PF-nYA3N-5RJm-gXqwHF2LXClRH9BEwm_cqtj6bMtuuJMWLqfgbkSwFECdgRlo_GULMgGZS0EumxrKbZFiOmnmAPChBPDZ5JP';
+  const weightReqUrl = 'https://jawbone.com/nudge/api/v.1.1/users/@me/body_events';
+  const activitiesReqUrl = 'https://jawbone.com/nudge/api/v.1.1/users/@me/moves?';
+  const sleepReqUrl = 'https://jawbone.com/nudge/api/v.1.1/users/@me/sleeps?';
+  const hrReqUrl = 'https://jawbone.com/nudge/api/v.1.1/users/@me/heartrates';
 
-  jawboneCallback: (req, res, done) => {
-    const code = req.query.code;
-    client.getToken(code, redirectUri)
-    .then((token) => {
-      const jawboneId = token.data.xid;
-      User.where({ jawbone_id: jawboneId })
-        .fetch()
-        .then(user => {
-          if (!user) {
-            const newUser = new User({
-              device: 'Jawbone',
-              jawbone_id: jawboneId,
-            });
-            newUser.save()
-              .then((saveError, savedUser) => {
-                req.session.user = newUser.get('id');
-                done(saveError, savedUser);
-              });
-          } else {
-            req.session.user = user.get('id');
-          }
-        })
-        .then(() => {
-          res.status(302).redirect('/');
-        });
-    })
-    .catch((err) => {
-      // MORE PRECISE ERROR HANDLING?
-      res.status(500).send(err);
-    });
-  },
+  const sendWeight = (cb) => jawboneRequestHelpers.sendRequest(weightReqUrl, auth, res, date, userid, jawboneRequestHelpers.insertWeight, cb);
+  const sendActivities = (cb) => jawboneRequestHelpers.sendRequest(activitiesReqUrl, auth, res, date, userid, jawboneRequestHelpers.insertActivities, cb);
+  const sendSleep = (cb) => jawboneRequestHelpers.sendRequest(sleepReqUrl, auth, res, date, userid, jawboneRequestHelpers.insertSleep, cb);
+  const sendHR = (cb) => jawboneRequestHelpers.sendRequest(hrReqUrl, auth, res, date, userid, jawboneRequestHelpers.insertHR, cb);
+
+  const syncTasks = [sendWeight, sendActivities, sendSleep, sendHR];
+  const callback = () => console.log('Inserted all items into database');
+  syncTasks.push((cb) => {
+    setTimeout(() => {
+      cb();
+    }, 1000);
+  });
+  syncMap(syncTasks, callback, []);
 };
+
+module.exports = getJawboneData;

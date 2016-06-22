@@ -1,5 +1,5 @@
-const JawboneController = require('../controllers/JawboneController');
+const getJawboneData = require('../controllers/JawboneController');
 
 module.exports = (app) => {
-  // app.get('/api/user', );
+  app.get('/api/jawbone', (req, res) => getJawboneData(req, res));
 };
