@@ -2,21 +2,22 @@ const fitbitRequestHelpers = require('../lib/fitbitRequestHelpers');
 const utils = require('../lib/utils');
 
 const getFitbitData = (req, res) => {
-  // const userid = req.query.user_id
-  // const fitbitId = req.query.fitbit_id;
-  // const accessToken = req.query.accessToken;
-  // const startDate = req.query.startDate;
-  // const endDate = req.query.endDate;
-  // const auth = 'Bearer', accessToken;
-
   // date needs to be in yyyy-MM-dd format
 
+  // const userid = 2;
+  // const fitbitId = '4PM7XM';
+  // const startDate = '2016-06-18';
+  // const endDate = '2016-06-21';
+  // const auth = 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJleHAiOjE0NjY1NzIyMzIsInNjb3BlcyI6InJ3ZWkgcnBybyByaHIgcnNsZSByc2V0IHJhY3QiLCJzdWIiOiI0UE03WE0iLCJhdWQiOiIyMjdWM00iLCJpc3MiOiJGaXRiaXQiLCJ0eXAiOiJhY2Nlc3NfdG9rZW4iLCJpYXQiOjE0NjY1Njg2MzJ9.0IQvjCNB7veMeigMk05vRYzCkV8h-X_uIwMWjD1UiXI';
+
   // UDPATE THESE ONCE YOU ACTUALLY GET EXTERNAL REQUESTS
-  const userid = 2;
-  const fitbitId = '4PM7XM';
-  const startDate = '2016-06-18';
-  const endDate = '2016-06-21';
-  const auth = 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJleHAiOjE0NjY1NzIyMzIsInNjb3BlcyI6InJ3ZWkgcnBybyByaHIgcnNsZSByc2V0IHJhY3QiLCJzdWIiOiI0UE03WE0iLCJhdWQiOiIyMjdWM00iLCJpc3MiOiJGaXRiaXQiLCJ0eXAiOiJhY2Nlc3NfdG9rZW4iLCJpYXQiOjE0NjY1Njg2MzJ9.0IQvjCNB7veMeigMk05vRYzCkV8h-X_uIwMWjD1UiXI';
+  const userid = req.query.user_id;
+  const fitbitId = req.query.fitbit_id;
+  const accessToken = req.query.accessToken;
+  const startDate = req.query.startDate;
+  const endDate = req.query.endDate;
+  const auth = 'Bearer ' + accessToken;
+
   const distanceReqUrl = 'https://api.fitbit.com/1/user/' + fitbitId + '/activities/distance/date/' + startDate + '/' + endDate + '.json';
   const stepsReqUrl = 'https://api.fitbit.com/1/user/' + fitbitId + '/activities/steps/date/' + startDate + '/' + endDate + '.json';
   const caloriesReqUrl = 'https://api.fitbit.com/1/user/' + fitbitId + '/activities/tracker/calories/date/' + startDate + '/' + endDate + '.json';
@@ -33,7 +34,6 @@ const getFitbitData = (req, res) => {
 
   const syncTasks = [sendDistance, sendSteps, sendCalories, sendSleep, sendHR, sendWeight];
   const callback = () => console.log('Inserted all items into database');
-  // WILL BE USING THIS CALLBACK TO SEND BACK RESPONSE
   syncTasks.push((cb) => {
     setTimeout(() => {
       cb();
