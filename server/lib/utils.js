@@ -1,4 +1,5 @@
 const request = require('request');
+const Activity = require('../models/ActivityModel');
 
 const sendRequest = (url, auth, res, userid, helper, cb) => {
   const options = {
@@ -16,7 +17,6 @@ const sendRequest = (url, auth, res, userid, helper, cb) => {
       console.error('Error:', err);
     } else {
       helper(body, userid, cb);
-      res.send();
     }
   });
 };
@@ -31,4 +31,13 @@ const syncMap = (tasks, callback) => {
   }
 };
 
-module.exports = { sendRequest, syncMap };
+const findUserInfo = (userid, res) => {
+  Activity.where({ user_id: userid })
+    .fetchAll()
+    .then((activities) => res.send(activities))
+    .catch((err) => {
+      console.error('Error in getting info from user', userid, err);
+    });
+};
+
+module.exports = { sendRequest, syncMap, findUserInfo };

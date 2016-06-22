@@ -4,7 +4,6 @@ const utils = require('./utils');
 
 module.exports = {
   syncIterateThrough: (data, userid, type, array, insert, cb) => {
-    console.log('data', data[array]);
     const syncTasks = [];
     data[array].forEach((datum) => {
       syncTasks.push((cb) => {

@@ -32,7 +32,8 @@ const getJawboneData = (req, res) => {
   syncTasks.push((cb) => {
     setTimeout(() => {
       cb();
-    }, 1000);
+      utils.findUserInfo(userid, res);
+    }, 100);
   });
   utils.syncMap(syncTasks, callback, []);
 };

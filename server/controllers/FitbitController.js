@@ -14,7 +14,6 @@ const getFitbitData = (req, res) => {
   // UDPATE THESE ONCE YOU ACTUALLY GET EXTERNAL REQUESTS
   const userid = 2;
   const fitbitId = '4PM7XM';
-  const date = '2016-06-21';
   const startDate = '2016-06-18';
   const endDate = '2016-06-21';
   const auth = 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJleHAiOjE0NjY1NzIyMzIsInNjb3BlcyI6InJ3ZWkgcnBybyByaHIgcnNsZSByc2V0IHJhY3QiLCJzdWIiOiI0UE03WE0iLCJhdWQiOiIyMjdWM00iLCJpc3MiOiJGaXRiaXQiLCJ0eXAiOiJhY2Nlc3NfdG9rZW4iLCJpYXQiOjE0NjY1Njg2MzJ9.0IQvjCNB7veMeigMk05vRYzCkV8h-X_uIwMWjD1UiXI';
@@ -34,10 +33,12 @@ const getFitbitData = (req, res) => {
 
   const syncTasks = [sendDistance, sendSteps, sendCalories, sendSleep, sendHR, sendWeight];
   const callback = () => console.log('Inserted all items into database');
+  // WILL BE USING THIS CALLBACK TO SEND BACK RESPONSE
   syncTasks.push((cb) => {
     setTimeout(() => {
       cb();
-    }, 1000);
+      utils.findUserInfo(userid, res);
+    }, 100);
   });
   utils.syncMap(syncTasks, callback, []);
 };
