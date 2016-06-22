@@ -1,5 +1,5 @@
 const Activity = require('../models/ActivityModel');
-const syncMap = require('./syncMap');
+const utils = require('./utils');
 
 module.exports = {
   syncIterateThrough: (data, userid, type, insert, cb) => {
@@ -15,7 +15,7 @@ module.exports = {
       }, 1500);
     });
     const callback = () => console.log('Inserted', type, 'items into database');
-    syncMap(syncTasks, callback, []);
+    utils.syncMap(syncTasks, callback, []);
     cb();
   },
 
@@ -37,20 +37,26 @@ module.exports = {
         if (type === 'activities') {
           newAct.set({
             calories: datum.details.calories,
-            distance: datum.details.km,
+            distance: datum.details.km * 0.621371,
             steps: datum.details.steps,
           }).save();
         } else if (type === 'sleep') {
           const sleep = (datum.details.duration - datum.details.awake) / 60;
+          const typeOfSleep = {
+            rem: datum.details.rem / 60,
+            light: datum.details.light / 60,
+            deep: datum.details.deep / 60,
+          };
           newAct.set({
             totalSleep: sleep,
+            sleep: JSON.stringify(typeOfSleep),
           }).save();
         } else if (type === 'hr') {
           newAct.set({
             restingHR: datum.resting_heartrate,
           }).save();
         } else if (type === 'weight') {
-          const weight = datum.weight * 2.2046;
+          const weight = datum.weight * 2.20462;
           newAct.set({
             weight,
           }).save();

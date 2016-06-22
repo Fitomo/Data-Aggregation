@@ -1,59 +1,27 @@
-const request = require('request');
 const fitbitDatabaseHelpers = require('./fitbitDatabaseHelpers');
 
 module.exports = {
-  sendRequest: (url, auth, res, helper) => {
-    const options = {
-      url,
-      method: 'GET',
-      json: true,
-      headers: {
-        Authorization: auth,
-      },
-    };
-
-    request(options, (err, response, body) => {
-      if (err) {
-        console.error('Error:', err);
-      } else {
-        helper(body);
-        res.send();
-      }
-    });
+  insertDistance: (data, userid, cb) => {
+    fitbitDatabaseHelpers.syncIterateThrough(data, userid, 'distance', 'activities-distance', fitbitDatabaseHelpers.insertIntoDatabase, cb);
   },
 
-  insertDistance: (data) => {
-    console.log('DISTANCE DATA IN HELPER', data);
-    return data;
+  insertSteps: (data, userid, cb) => {
+    fitbitDatabaseHelpers.syncIterateThrough(data, userid, 'steps', 'activities-steps', fitbitDatabaseHelpers.insertIntoDatabase, cb);
   },
 
-  insertSteps: (data) => {
-    console.log('STEPS DATA IN HELPER', data);
-    return data;
+  insertCalories: (data, userid, cb) => {
+    fitbitDatabaseHelpers.syncIterateThrough(data, userid, 'calories', 'activities-tracker-calories', fitbitDatabaseHelpers.insertIntoDatabase, cb);
   },
 
-
-  insertCalories: (data) => {
-    console.log('CALORIES DATA IN HELPER', data);
-    return data;
+  insertSleep: (data, userid, cb) => {
+    fitbitDatabaseHelpers.syncIterateThrough(data, userid, 'sleep', 'sleep-minutesAsleep', fitbitDatabaseHelpers.insertIntoDatabase, cb);
   },
 
-  insertSleep: (data) => {
-    // data.summary.totalMinutesAsleep
-    console.log('SLEEP DATA IN HELPER', data);
-    console.log('asleep', data.summary.totalMinutesAsleep);
-    return data;
+  insertHR: (data, userid, cb) => {
+    fitbitDatabaseHelpers.syncIterateThrough(data, userid, 'hr', 'activities-heart', fitbitDatabaseHelpers.insertIntoDatabase, cb);
   },
 
-  insertHR: (data) => {
-    // data['activities-heart'][0].value.restingHeartRate
-    console.log('HR DATA IN HELPER', data);
-    console.log('resting hr', data['activities-heart']);
-    return data;
-  },
-
-  insertWeight: (data) => {
-    console.log('WEIGHT DATA IN HELPER', data);
-    return data;
+  insertWeight: (data, userid, cb) => {
+    fitbitDatabaseHelpers.syncIterateThrough(data, userid, 'weight', 'weight', fitbitDatabaseHelpers.insertIntoDatabase, cb);
   },
 };
