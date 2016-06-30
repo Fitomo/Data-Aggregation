@@ -1,5 +1,8 @@
 const request = require('request');
 const Activity = require('../models/ActivityModel');
+const moment = require('moment');
+const db = require('../config/db');
+const fitbitFormatDate = (date) => date.split('-').join('');
 
 const sendRequest = (url, auth, res, userid, helper, cb) => {
   const options = {
@@ -32,10 +35,18 @@ const syncMap = (tasks, callback) => {
   }
 };
 
-const findUserInfo = (userid, res) => {
-  Activity.where({ user_id: userid })
-    .fetchAll()
-    .then((activities) => res.send(activities))
+const findUserInfo = (userid, startDate, endDate, res, epoch) => {
+  if (epoch) {
+    startDate = Number(moment.unix(startDate).format('YYYYMMDD'));
+    endDate = Number(moment.unix(endDate).format('YYYYMMDD'));
+  } else {
+    startDate = Number(fitbitFormatDate(startDate));
+    endDate = Number(fitbitFormatDate(endDate));
+  }
+  db.knex('activities').where({ user_id: userid }).whereBetween('date', [startDate, endDate])
+    .then((activities) => {
+      res.send(activities);
+    })
     .catch((err) => {
       console.error('Error in getting info from user', userid, err);
     });

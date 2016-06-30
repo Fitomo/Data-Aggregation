@@ -26,7 +26,7 @@ module.exports = {
         if (!act) {
           act = new Activity({
             user_id: userid,
-            date: datum.date,
+            date: Number(datum.date),
             device: 'Jawbone',
           });
         }

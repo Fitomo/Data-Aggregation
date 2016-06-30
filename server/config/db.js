@@ -17,7 +17,7 @@ db.knex.schema.hasTable('activities').then((exists) => {
       activity.increments('id').primary();
       activity.integer('user_id');
       activity.string('device', 255);
-      activity.string('date', 255); // in form of yyyyMMdd
+      activity.integer('date'); // in form of yyyyMMdd
       activity.decimal('distance'); // in miles
       activity.integer('steps');
       activity.decimal('calories');

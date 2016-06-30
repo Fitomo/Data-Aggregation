@@ -1,14 +1,15 @@
 const fitbitRequestHelpers = require('../lib/fitbitRequestHelpers');
 const utils = require('../lib/utils');
+const moment = require('moment');
 
-const getFitbitData = (req, res) => {
+const updateFitbitData = (req, res) => {
   // date needs to be in yyyy-MM-dd format
 
   // const userid = 2;
   // const fitbitId = '4PM7XM';
-  // const startDate = '2016-06-18';
-  // const endDate = '2016-06-21';
-  // const auth = 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJleHAiOjE0NjY1NzIyMzIsInNjb3BlcyI6InJ3ZWkgcnBybyByaHIgcnNsZSByc2V0IHJhY3QiLCJzdWIiOiI0UE03WE0iLCJhdWQiOiIyMjdWM00iLCJpc3MiOiJGaXRiaXQiLCJ0eXAiOiJhY2Nlc3NfdG9rZW4iLCJpYXQiOjE0NjY1Njg2MzJ9.0IQvjCNB7veMeigMk05vRYzCkV8h-X_uIwMWjD1UiXI';
+  // const startDate = '2016-06-25';
+  // const endDate = '2016-06-29';
+  // const auth = 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJleHAiOjE0NjcyNjcxNDIsInNjb3BlcyI6InJ3ZWkgcnBybyByaHIgcnNsZSByc2V0IHJhY3QiLCJzdWIiOiI0UE03WE0iLCJhdWQiOiIyMjdWM00iLCJpc3MiOiJGaXRiaXQiLCJ0eXAiOiJhY2Nlc3NfdG9rZW4iLCJpYXQiOjE0NjcyNjM1NDJ9.s_oAjo0fkZrNjMRkT40gBqabivXIpAtWKHWazs5v970';
 
   // UDPATE THESE ONCE YOU ACTUALLY GET EXTERNAL REQUESTS
   const userid = req.query.user_id;
@@ -36,9 +37,16 @@ const getFitbitData = (req, res) => {
   const callback = () => console.log('Inserted all items into database');
   syncTasks.push((cb) => {
     cb();
-    utils.findUserInfo(userid, res);
+    utils.findUserInfo(userid, startDate, endDate, res, 0);
   });
   utils.syncMap(syncTasks, callback, []);
 };
 
-module.exports = getFitbitData;
+const retrieveFitbitData = (req, res) => {
+  const userid = req.query.user_id;
+  const startDate = req.query.startDate;
+  const endDate = req.query.endDate;
+  utils.findUserInfo(userid, startDate, endDate, res, 0);
+};
+
+module.exports = { updateFitbitData, retrieveFitbitData };

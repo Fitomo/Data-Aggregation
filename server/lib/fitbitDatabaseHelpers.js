@@ -27,7 +27,7 @@ module.exports = {
         if (!act) {
           act = new Activity({
             user_id: userid,
-            date: formattedDate,
+            date: Number(formattedDate),
             device: 'Fitbit',
           });
         }

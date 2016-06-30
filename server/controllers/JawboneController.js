@@ -1,24 +1,26 @@
 const jawboneRequestHelpers = require('../lib/jawboneRequestHelpers');
 const utils = require('../lib/utils');
+const moment = require('moment');
 
-const getJawboneData = (req, res) => {
+const updateJawboneData = (req, res) => {
   // START_TIME AND END_TIME NEED TO BE IN EPOCH TIME
-  // const startTime = 1466224150;
-  // const endTime = 1466569750;
+  // const startDate = moment('2016-06-18').unix();
+  // const endDate = moment('2016-06-21').unix();
+  // console.log('START AND END', startDate, endDate);
   // const userid = 1;
-  // const auth = 'Bearer u1r_4oEFjcHQQJPKxwCvVWS9Lrh8eW8PF-nYA3N-5RJm-gXqwHF2LXClRH9BEwm_cqtj6bMtuuJMWLqfgbkSwFECdgRlo_GULMgGZS0EumxrKbZFiOmnmAPChBPDZ5JP';
+  // const auth = 'Bearer u1r_4oEFjcHQQJPKxwCvVWS9Lrh8eW8PF-nYA3N-5RKQa3kHVxV-PHcQGHjAoLVQcqtj6bMtuuJMWLqfgbkSwFECdgRlo_GULMgGZS0EumxrKbZFiOmnmAPChBPDZ5JP';
 
   // ****** UDPATE THESE ONCE YOU ACTUALLY GET EXTERNAL REQUESTS
   const userid = req.query.user_id;
   const accessToken = req.query.accessToken;
-  const startTime = req.query.startDate;
-  const endTime = req.query.endDate;
+  const startDate = moment(req.query.startDate).unix();
+  const endDate = moment(req.query.endDate).unix();
   const auth = `Bearer ${accessToken}`;
 
-  const weightReqUrl = `https://jawbone.com/nudge/api/v.1.1/users/@me/body_events?start_time=${startTime}&end_time=${endTime}`;
-  const activitiesReqUrl = `https://jawbone.com/nudge/api/v.1.1/users/@me/moves?start_time=${startTime}&end_time=${endTime}`;
-  const sleepReqUrl = `https://jawbone.com/nudge/api/v.1.1/users/@me/sleeps?start_time=${startTime}&end_time=${endTime}`;
-  const hrReqUrl = `https://jawbone.com/nudge/api/v.1.1/users/@me/heartrates?start_time=${startTime}&end_time=${endTime}`;
+  const weightReqUrl = `https://jawbone.com/nudge/api/v.1.1/users/@me/body_events?start_time=${startDate}&end_time=${endDate}`;
+  const activitiesReqUrl = `https://jawbone.com/nudge/api/v.1.1/users/@me/moves?start_time=${startDate}&end_time=${endDate}`;
+  const sleepReqUrl = `https://jawbone.com/nudge/api/v.1.1/users/@me/sleeps?start_time=${startDate}&end_time=${endDate}`;
+  const hrReqUrl = `https://jawbone.com/nudge/api/v.1.1/users/@me/heartrates?start_time=${startDate}&end_time=${endDate}`;
 
   const sendActivities = (cb) => utils.sendRequest(activitiesReqUrl, auth, res, userid, jawboneRequestHelpers.insertActivities, cb);
   const sendSleep = (cb) => utils.sendRequest(sleepReqUrl, auth, res, userid, jawboneRequestHelpers.insertSleep, cb);
@@ -30,9 +32,16 @@ const getJawboneData = (req, res) => {
   const callback = () => console.log('Inserted all items into database');
   syncTasks.push((cb) => {
     cb();
-    utils.findUserInfo(userid, res);
+    utils.findUserInfo(userid, startDate, endDate, res, 1);
   });
   utils.syncMap(syncTasks, callback, []);
 };
 
-module.exports = getJawboneData;
+const retrieveJawboneData = (req, res) => {
+  const userid = req.query.user_id;
+  const startDate = req.query.startDate;
+  const endDate = req.query.endDate;
+  utils.findUserInfo(userid, startDate, endDate, res, 0);
+};
+
+module.exports = { updateJawboneData, retrieveJawboneData };
