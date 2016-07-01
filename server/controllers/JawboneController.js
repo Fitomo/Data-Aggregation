@@ -11,7 +11,7 @@ const updateJawboneData = (req, res) => {
   // const auth = 'Bearer u1r_4oEFjcHQQJPKxwCvVWS9Lrh8eW8PF-nYA3N-5RKQa3kHVxV-PHcQGHjAoLVQcqtj6bMtuuJMWLqfgbkSwFECdgRlo_GULMgGZS0EumxrKbZFiOmnmAPChBPDZ5JP';
 
   // ****** UDPATE THESE ONCE YOU ACTUALLY GET EXTERNAL REQUESTS
-  const userid = req.query.user_id;
+  const userid = req.query.id;
   const accessToken = req.query.accessToken;
   const startDate = moment(req.query.startDate).unix();
   const endDate = moment(req.query.endDate).unix();
@@ -38,7 +38,7 @@ const updateJawboneData = (req, res) => {
 };
 
 const retrieveJawboneData = (req, res) => {
-  const userid = req.query.user_id;
+  const userid = req.query.id;
   const startDate = req.query.startDate;
   const endDate = req.query.endDate;
   utils.findUserInfo(userid, startDate, endDate, res, 0);

@@ -20,7 +20,12 @@ module.exports = {
   },
 
   insertIntoDatabase: (datum, userid, type, cb) => {
-    const formattedDate = formatDate(datum.dateTime);
+    let formattedDate = '';
+    if (!datum.dateTime) {
+      formattedDate = formatDate(datum.date);
+    } else {
+      formattedDate = formatDate(datum.dateTime);
+    }
     Activity.where({ user_id: userid, date: formattedDate })
       .fetch()
       .then((activity) => {
@@ -59,9 +64,10 @@ module.exports = {
           }).save();
         } else if (type === 'weight') {
           return newAct.set({
-            weight: datum.value,
+            weight: datum.weight,
           }).save();
         }
+        return newAct;
       })
       .then(() => {
         cb();

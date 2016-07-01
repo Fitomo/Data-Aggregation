@@ -12,7 +12,7 @@ const updateFitbitData = (req, res) => {
   // const auth = 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJleHAiOjE0NjcyNjcxNDIsInNjb3BlcyI6InJ3ZWkgcnBybyByaHIgcnNsZSByc2V0IHJhY3QiLCJzdWIiOiI0UE03WE0iLCJhdWQiOiIyMjdWM00iLCJpc3MiOiJGaXRiaXQiLCJ0eXAiOiJhY2Nlc3NfdG9rZW4iLCJpYXQiOjE0NjcyNjM1NDJ9.s_oAjo0fkZrNjMRkT40gBqabivXIpAtWKHWazs5v970';
 
   // UDPATE THESE ONCE YOU ACTUALLY GET EXTERNAL REQUESTS
-  const userid = req.query.user_id;
+  const userid = req.query.id;
   const fitbitId = req.query.fitbit_id;
   const accessToken = req.query.accessToken;
   const startDate = req.query.startDate;
@@ -43,8 +43,7 @@ const updateFitbitData = (req, res) => {
 };
 
 const retrieveFitbitData = (req, res) => {
-  // const userid = req.query.user_id;
-  const userid = 2;
+  const userid = req.query.id;
   const startDate = req.query.startDate;
   const endDate = req.query.endDate;
   utils.findUserInfo(userid, startDate, endDate, res, 0);

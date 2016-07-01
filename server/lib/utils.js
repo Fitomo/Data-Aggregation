@@ -1,5 +1,4 @@
 const request = require('request');
-const Activity = require('../models/ActivityModel');
 const moment = require('moment');
 const db = require('../config/db');
 const fitbitFormatDate = (date) => date.split('-').join('');

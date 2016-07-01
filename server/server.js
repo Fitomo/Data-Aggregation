@@ -24,6 +24,6 @@ require('./routes/fitbit-routes.js')(app);
 // Jawbone Routes
 require('./routes/jawbone-routes.js')(app);
 
-http.listen(8000, 'localhost', () => {
+http.listen(8000, process.env.HOST, () => {
   console.log('Listening on 8000...');
 });
