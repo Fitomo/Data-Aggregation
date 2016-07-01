@@ -1,4 +1,12 @@
 require('babel-register');
+const environment = require('dotenv');
+
+// Load environment variables
+if (process.env.NODE_ENV === 'development') {
+  environment.config({ path: './env/development.env' });
+} else if (process.env.NODE_ENV === 'production') {
+  environment.config({ path: './env/production.env' });
+}
 
 const express = require('express');
 const app = express();

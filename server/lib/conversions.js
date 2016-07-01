@@ -1,5 +1,7 @@
 module.exports = {
-  secondsToMinutes: ((seconds) => seconds / 60),
+  secondsToHours: ((seconds) => seconds / 3600),
+
+  minutesToHours: ((minutes) => minutes / 60),
 
   kmsToMiles: ((kms) => kms * 0.621371),
 

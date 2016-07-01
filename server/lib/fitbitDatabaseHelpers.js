@@ -1,6 +1,7 @@
 const formatDate = (date) => date.split('-').join('');
 const Activity = require('../models/ActivityModel');
 const utils = require('./utils');
+const conversions = require('./conversions');
 
 module.exports = {
   syncIterateThrough: (data, userid, type, array, insert, cb) => {
@@ -49,7 +50,7 @@ module.exports = {
           }).save();
         } else if (type === 'sleep') {
           return newAct.set({
-            totalSleep: datum.value,
+            totalSleep: conversions.minutesToHours(datum.value),
           }).save();
         } else if (type === 'hr') {
           return newAct.set({

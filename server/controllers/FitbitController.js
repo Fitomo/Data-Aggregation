@@ -43,7 +43,8 @@ const updateFitbitData = (req, res) => {
 };
 
 const retrieveFitbitData = (req, res) => {
-  const userid = req.query.user_id;
+  // const userid = req.query.user_id;
+  const userid = 2;
   const startDate = req.query.startDate;
   const endDate = req.query.endDate;
   utils.findUserInfo(userid, startDate, endDate, res, 0);

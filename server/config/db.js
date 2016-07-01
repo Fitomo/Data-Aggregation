@@ -2,9 +2,9 @@ const knex = require('knex')({
   client: 'mysql',
   connection: {
     host: 'localhost',
-    database: 'fitomo_data_agg',
-    user: 'root',
-    password: '123',
+    database: process.env.APP_NAME,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
     charset: 'utf8',
   },
 });
@@ -25,7 +25,7 @@ db.knex.schema.hasTable('activities').then((exists) => {
       activity.decimal('restingHR');
       activity.decimal('weight'); // in lbs
       activity.string('heartRateZones', 1000);
-      activity.string('sleep', 1000); // in minutes
+      activity.string('sleep', 1000); // in hours
       activity.timestamps();
     }).then((table) => {
       console.log('Created Table activities:', table);

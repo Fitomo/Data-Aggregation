@@ -9,7 +9,7 @@
     "node": ">=4.0.0"
   },
   "scripts": {
-    "start": "nodemon server/server.js",
+    "start": "NODE_ENV=development nodemon server/server.js",
     "lint": "eslint ."
   },
   "babel": {
@@ -22,6 +22,7 @@
     "babel-eslint": "^6.0.4",
     "body-parser": "^1.15.1",
     "bookshelf": "^0.9.5",
+    "dotenv": "^2.0.0",
     "express": "^4.14.0",
     "express-session": "^1.13.0",
     "fitbit-client-oauth2": "^2.0.3",

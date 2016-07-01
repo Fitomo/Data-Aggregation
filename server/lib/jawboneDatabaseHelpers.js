@@ -41,11 +41,11 @@ module.exports = {
             steps: datum.details.steps,
           }).save();
         } else if (type === 'sleep') {
-          const sleep = conversions.secondsToMinutes((datum.details.duration - datum.details.awake));
+          const sleep = conversions.secondsToHours((datum.details.duration - datum.details.awake));
           const typeOfSleep = {
-            rem: conversions.secondsToMinutes(datum.details.rem),
-            light: conversions.secondsToMinutes(datum.details.light),
-            deep: conversions.secondsToMinutes(datum.details.deep),
+            rem: conversions.secondsToHours(datum.details.rem),
+            light: conversions.secondsToHours(datum.details.light),
+            deep: conversions.secondsToHours(datum.details.deep),
           };
           return newAct.set({
             totalSleep: sleep,
