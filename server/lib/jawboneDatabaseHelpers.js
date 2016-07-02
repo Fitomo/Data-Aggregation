@@ -5,17 +5,21 @@ const conversions = require('./conversions');
 module.exports = {
   syncIterateThrough: (data, userid, type, insert, cb) => {
     const syncTasks = [];
-    data.data.items.forEach((datum) => {
-      syncTasks.push((cb) => {
-        insert(datum, userid, type, cb);
+    if (Array.isArray(data.data.items)) {
+      data.data.items.forEach((datum) => {
+        syncTasks.push((cb) => {
+          insert(datum, userid, type, cb);
+        });
       });
-    });
-    syncTasks.push((callback) => {
-      callback();
-    });
-    const callback = () => console.log('Inserted', type, 'items into database');
-    utils.syncMap(syncTasks, callback, []);
-    cb();
+      syncTasks.push((callback) => {
+        callback();
+      });
+      const callback = () => console.log('Inserted', type, 'items into database');
+      utils.syncMap(syncTasks, callback, []);
+      cb();
+    } else {
+      cb();
+    }
   },
 
   insertIntoDatabase: (datum, userid, type, cb) => {

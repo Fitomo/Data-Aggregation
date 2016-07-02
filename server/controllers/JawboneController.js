@@ -6,7 +6,6 @@ const updateJawboneData = (req, res) => {
   // START_TIME AND END_TIME NEED TO BE IN EPOCH TIME
   // const startDate = moment('2016-06-18').unix();
   // const endDate = moment('2016-06-21').unix();
-  // console.log('START AND END', startDate, endDate);
   // const userid = 1;
   // const auth = 'Bearer u1r_4oEFjcHQQJPKxwCvVWS9Lrh8eW8PF-nYA3N-5RKQa3kHVxV-PHcQGHjAoLVQcqtj6bMtuuJMWLqfgbkSwFECdgRlo_GULMgGZS0EumxrKbZFiOmnmAPChBPDZ5JP';
 
