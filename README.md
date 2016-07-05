@@ -84,7 +84,7 @@ This service takes 'GET' requests at 'api/(fitbit or jawbone)/update' and 'api/(
 - Fitbit API
 - Jawbone API
 
-##### Back end:
+##### Testing:
 - Mocha
 - Chai
 
