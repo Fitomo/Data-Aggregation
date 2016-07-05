@@ -1,9 +1,16 @@
-const moment = require('moment');
 const file = require('../generatedUserData.json');
+const environment = require('dotenv');
+
+// Load environment variables
+if (process.env.NODE_ENV === 'development') {
+  environment.config({ path: './env/development.env' });
+} else if (process.env.NODE_ENV === 'production') {
+  environment.config({ path: './env/production.env' });
+}
+
 const Activity = require('../models/ActivityModel');
 
 const insertGeneratedUsers = (file, userid) => {
-  // iterate through object's keys - grab the following data:
   for (let key in file) {
     const data = { user_id: userid };
     data.device = file[key].deviceType;
@@ -17,8 +24,7 @@ const insertGeneratedUsers = (file, userid) => {
       data.weight = activity.weight;
       data.heartRateZones = JSON.stringify(activity.heartRateZones) || null;
       data.sleep = JSON.stringify(activity.sleep) || null;
-      console.log(data);
-      const act = new Activity(data).save();
+      new Activity(data).save();
     });
   }
 };
