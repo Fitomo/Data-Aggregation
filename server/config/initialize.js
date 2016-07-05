@@ -8,7 +8,6 @@ const allowCrossDomain = (req, res, next) => {
   next();
 };
 
-
 module.exports = (app) => {
   app.use(morgan('dev'));
   app.use(bodyParser.json());

@@ -16,8 +16,7 @@ const sendRequest = (url, auth, res, userid, helper, cb) => {
 
   request(options, (err, response, body) => {
     if (err) {
-      // ****** HANDLE THIS ERROR
-      console.error('Error:', err);
+      console.error('Error getting data from the API:', err);
     } else {
       helper(body, userid, cb);
     }
@@ -25,6 +24,7 @@ const sendRequest = (url, auth, res, userid, helper, cb) => {
 };
 
 const syncMap = (tasks, callback) => {
+  // Function for executing functions synchronously
   if (tasks.length === 1) {
     tasks[0](() => callback());
   } else {
@@ -34,8 +34,9 @@ const syncMap = (tasks, callback) => {
   }
 };
 
-const findUserInfo = (userid, startDate, endDate, res, epoch) => {
-  if (epoch) {
+const findUserInfo = (userid, startDate, endDate, res, unix) => {
+  // Convert unix times to 'YYYYMMDD' format (need to send dates in unix time for Jawbone API)
+  if (unix) {
     startDate = Number(moment.unix(startDate).format('YYYYMMDD'));
     endDate = Number(moment.unix(endDate).format('YYYYMMDD'));
   } else {

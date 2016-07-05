@@ -12,10 +12,10 @@ const express = require('express');
 const app = express();
 const http = require('http').Server(app);
 
-// Initial Configuration, Static Assets, & View Engine Configuration
+// Initial Configuration
 require('./config/initialize.js')(app);
 
-// Authentication Middleware: Express Sessions, Passport Strategy
+// Authentication Middleware: Express Sessions
 require('./config/auth.js')(app);
 
 // Fitbit Routes

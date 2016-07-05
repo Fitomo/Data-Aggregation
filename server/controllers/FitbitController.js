@@ -1,17 +1,8 @@
 const fitbitRequestHelpers = require('../lib/fitbitRequestHelpers');
 const utils = require('../lib/utils');
-const moment = require('moment');
 
 const updateFitbitData = (req, res) => {
-  // date needs to be in yyyy-MM-dd format
-
-  // const userid = 2;
-  // const fitbitId = '4PM7XM';
-  // const startDate = '2016-06-25';
-  // const endDate = '2016-06-29';
-  // const auth = 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJleHAiOjE0NjcyNjcxNDIsInNjb3BlcyI6InJ3ZWkgcnBybyByaHIgcnNsZSByc2V0IHJhY3QiLCJzdWIiOiI0UE03WE0iLCJhdWQiOiIyMjdWM00iLCJpc3MiOiJGaXRiaXQiLCJ0eXAiOiJhY2Nlc3NfdG9rZW4iLCJpYXQiOjE0NjcyNjM1NDJ9.s_oAjo0fkZrNjMRkT40gBqabivXIpAtWKHWazs5v970';
-
-  // UDPATE THESE ONCE YOU ACTUALLY GET EXTERNAL REQUESTS
+  // Get parameters from request
   const userid = req.query.id;
   const fitbitId = req.query.fitbit_id;
   const accessToken = req.query.accessToken;
@@ -26,6 +17,7 @@ const updateFitbitData = (req, res) => {
   const hrReqUrl = `https://api.fitbit.com/1/user/${fitbitId}/activities/heart/date/${startDate}/${endDate}.json`;
   const weightReqUrl = `https://api.fitbit.com/1/user/${fitbitId}/body/log/weight/date/${startDate}/${endDate}.json`;
 
+  // Send out API requests and subsequently insert data into database
   const sendDistance = (cb) => utils.sendRequest(distanceReqUrl, auth, res, userid, fitbitRequestHelpers.insertDistance, cb);
   const sendSteps = (cb) => utils.sendRequest(stepsReqUrl, auth, res, userid, fitbitRequestHelpers.insertSteps, cb);
   const sendCalories = (cb) => utils.sendRequest(caloriesReqUrl, auth, res, userid, fitbitRequestHelpers.insertCalories, cb);
@@ -33,19 +25,24 @@ const updateFitbitData = (req, res) => {
   const sendHR = (cb) => utils.sendRequest(hrReqUrl, auth, res, userid, fitbitRequestHelpers.insertHR, cb);
   const sendWeight = (cb) => utils.sendRequest(weightReqUrl, auth, res, userid, fitbitRequestHelpers.insertWeight, cb);
 
+  // Put API requests and database insertions in queue
   const syncTasks = [sendDistance, sendSteps, sendCalories, sendSleep, sendHR, sendWeight];
   const callback = () => console.log('Inserted all items into database');
   syncTasks.push((cb) => {
-    cb();
     utils.findUserInfo(userid, startDate, endDate, res, 0);
+    cb();
   });
+  // Call each function in sequence
   utils.syncMap(syncTasks, callback, []);
 };
 
 const retrieveFitbitData = (req, res) => {
+  // Get parameters from request
   const userid = req.query.id;
   const startDate = req.query.startDate;
   const endDate = req.query.endDate;
+
+  // Get user's info from database for given parameters
   utils.findUserInfo(userid, startDate, endDate, res, 0);
 };
 

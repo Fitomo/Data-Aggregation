@@ -5,10 +5,12 @@ const conversions = require('./conversions');
 
 module.exports = {
   syncIterateThrough: (data, userid, type, array, insert, cb) => {
-    if (!data.errors) {
+    // Handling different error messages from Fitbit
+    if (data[array]) {
       const syncTasks = [];
+      // Put each database insertion instance into a queue
       data[array].forEach((datum) => {
-        syncTasks.push((cb) => {
+        syncTasks.push(() => {
           insert(datum, userid, type, cb);
         });
       });
@@ -16,6 +18,7 @@ module.exports = {
         callback();
       });
       const callback = () => console.log('Inserted', type, 'items into database');
+      // Insert each item into the database in sequence
       utils.syncMap(syncTasks, callback, []);
       cb();
     } else {
@@ -25,6 +28,8 @@ module.exports = {
 
   insertIntoDatabase: (datum, userid, type, cb) => {
     let formattedDate = '';
+    // Weight comes back in different format than other things
+    // If statement below checks for weight data
     if (!datum.dateTime) {
       formattedDate = formatDate(datum.date);
     } else {
@@ -34,6 +39,7 @@ module.exports = {
       .fetch()
       .then((activity) => {
         let act = activity || null;
+        // If there is no such activity data point, create one
         if (!act) {
           act = new Activity({
             user_id: userid,
@@ -44,34 +50,36 @@ module.exports = {
         return act;
       })
       .then((newAct) => {
-        // ******* SWITCH CASE?
-        if (type === 'distance') {
+        // Add different attributes to the row based on what type of request had been sent
+        switch (type) {
+        case 'distance':
           return newAct.set({
             distance: datum.value,
           }).save();
-        } else if (type === 'steps') {
+        case 'steps':
           return newAct.set({
             steps: datum.value,
           }).save();
-        } else if (type === 'calories') {
+        case 'calories':
           return newAct.set({
             calories: datum.value,
           }).save();
-        } else if (type === 'sleep') {
+        case 'sleep':
           return newAct.set({
             totalSleep: conversions.minutesToHours(datum.value),
           }).save();
-        } else if (type === 'hr') {
+        case 'hr':
           return newAct.set({
             restingHR: datum.value.restingHR,
             heartRateZones: JSON.stringify(datum.value.heartRateZones),
           }).save();
-        } else if (type === 'weight') {
+        case 'weight':
           return newAct.set({
             weight: datum.weight,
           }).save();
+        default:
+          return newAct;
         }
-        return newAct;
       })
       .then(() => {
         cb();

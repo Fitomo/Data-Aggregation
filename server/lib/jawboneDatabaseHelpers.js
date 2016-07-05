@@ -4,8 +4,9 @@ const conversions = require('./conversions');
 
 module.exports = {
   syncIterateThrough: (data, userid, type, insert, cb) => {
-    const syncTasks = [];
     if (Array.isArray(data.data.items)) {
+      const syncTasks = [];
+      // Put each database insertion instance into a queue
       data.data.items.forEach((datum) => {
         syncTasks.push((cb) => {
           insert(datum, userid, type, cb);
@@ -15,6 +16,7 @@ module.exports = {
         callback();
       });
       const callback = () => console.log('Inserted', type, 'items into database');
+      // Insert each item into the database in sequence
       utils.syncMap(syncTasks, callback, []);
       cb();
     } else {
@@ -27,6 +29,7 @@ module.exports = {
       .fetch()
       .then((activity) => {
         let act = activity || null;
+        // If there is no such activity data point, create one
         if (!act) {
           act = new Activity({
             user_id: userid,
@@ -37,14 +40,15 @@ module.exports = {
         return act;
       })
       .then((newAct) => {
-        // ******* SWITCH CASE?
-        if (type === 'activities') {
+        // Add different attributes to the row based on what type of request had been sent
+        switch (type) {
+        case 'activities':
           return newAct.set({
             calories: datum.details.calories,
             distance: conversions.kmsToMiles(datum.details.km),
             steps: datum.details.steps,
           }).save();
-        } else if (type === 'sleep') {
+        case 'sleep':
           const sleep = conversions.secondsToHours((datum.details.duration - datum.details.awake));
           const typeOfSleep = {
             rem: conversions.secondsToHours(datum.details.rem),
@@ -55,15 +59,17 @@ module.exports = {
             totalSleep: sleep,
             sleep: JSON.stringify(typeOfSleep),
           }).save();
-        } else if (type === 'hr') {
+        case 'hr':
           return newAct.set({
             restingHR: datum.resting_heartrate,
           }).save();
-        } else if (type === 'weight') {
+        case 'weight':
           const weight = conversions.kgsToLbs(datum.weight);
           return newAct.set({
             weight,
           }).save();
+        default:
+          return newAct;
         }
       })
       .then(() => {
