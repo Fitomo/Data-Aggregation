@@ -3,7 +3,6 @@ const utils = require('../lib/utils');
 const moment = require('moment');
 
 const updateJawboneData = (req, res) => {
-  // START_TIME AND END_TIME NEED TO BE IN EPOCH TIME
   // const startDate = moment('2016-06-18').unix();
   // const endDate = moment('2016-06-21').unix();
   // const userid = 1;
