@@ -5,7 +5,7 @@
 ## Table of Contents
 1. [Usage](#Usage)
 2. [Getting started](#Getting-Started)
-  1. [Clone the latest version](#Install-Dependencies)
+  1. [Clone the latest version](#Clone-Latest)
   2. [Install dependencies](#Install-Dependencies)
   3. [Run the application](#Run-Application)
 3. [Tech Stack](#Tech-Stack)
@@ -64,7 +64,7 @@ This service takes 'GET' requests at 'api/(fitbit or jawbone)/update' and 'api/(
 
 #### 3. Run the application
 
-  1. Using the env/example.env file as an example, setup your environment variables.
+  1. Using the env/example.env file as an example, setup your environment variables in a development.env file.
 
   2. In a new terminal window run the following command to start the application:
 
@@ -84,7 +84,7 @@ This service takes 'GET' requests at 'api/(fitbit or jawbone)/update' and 'api/(
 - Fitbit API
 - Jawbone API
 
-##### Back end:
+##### Testing:
 - Mocha
 - Chai
 
