@@ -49,6 +49,7 @@ const findUserInfo = (userid, startDate, endDate, res, unix) => {
     })
     .catch((err) => {
       console.error('Error in getting info from user', userid, err);
+      res.status(500).send();
     });
 };
 
