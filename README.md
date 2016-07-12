@@ -15,7 +15,7 @@
 
 ## Usage
 
-This service takes 'GET' requests at 'api/(fitbit or jawbone)/update' and 'api/(fitbit or jawbone)/retrieve'
+This service takes 'GET' requests at '/api/(fitbit or jawbone)/update' and '/api/(fitbit or jawbone)/retrieve'
 
   Requests to '/api/fitbit/update' should include the following:
 
