@@ -1,13 +1,6 @@
 const file = require('../generatedUserData.json');
 const environment = require('dotenv');
 
-// Load environment variables
-if (process.env.NODE_ENV === 'development') {
-  environment.config({ path: './env/development.env' });
-} else if (process.env.NODE_ENV === 'production') {
-  environment.config({ path: './env/production.env' });
-}
-
 const Activity = require('../models/ActivityModel');
 
 const insertGeneratedUsers = (file, userid) => {
