@@ -29,4 +29,5 @@ const insertGeneratedUsers = (file, userid) => {
   }
 };
 
-insertGeneratedUsers(file, 1);
+const user = process.argv[2];
+insertGeneratedUsers(file, user);
